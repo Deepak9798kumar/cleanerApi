@@ -3,9 +3,7 @@ const app = express()
 const router = require("./router/router")
 const DBConnection = require("./db/dbConnection")
 
-
-
-app.use(".user", router)
+app.use("/", router);
 
 app.listen(8000, () => {
     console.log(`server is running at port no. ${8000}`);
