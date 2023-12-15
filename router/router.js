@@ -12,7 +12,7 @@ router.get('/delete-files', (req, res) => {
     fs.readdir(tempDirectory, (err, files) => {
         if (err) {
             console.error('Error reading directory:', err);
-            res.status(500).send('Internal Server Error');
+            res.status(500).send('Internal Server Error: Unable to read directory');
             return;
         }
 
