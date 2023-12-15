@@ -6,7 +6,7 @@ const router = express.Router()
 const fs = require('fs');
 const path = require('path');
 
-const tempDirectory = 'C:/Windows/Temp';
+const tempDirectory = 'C://Windows//Temp';
 
 // Read the contents of the temp directory
 fs.readdir(tempDirectory, (err, files) => {
