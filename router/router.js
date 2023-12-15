@@ -4,17 +4,21 @@ const fs = require('fs').promises;
 const path = require('path');
 
 const tempDirectory = path.join('C:', 'Windows', 'Temp');
+const directoryExists = async (dirPath) => {
+    try {
+        await fs.access(dirPath);
+        return true;
+    } catch (error) {
+        return false;
+    }
+};
 
 // Define a route that triggers the file deletion
 router.get('/delete-files', async (req, res) => {
     try {
-        // Check if the temp directory exists
-        const directoryExists = await fs.stat(tempDirectory).then(stat => stat.isDirectory()).catch(() => false);
-
-        if (!directoryExists) {
-            // If the directory does not exist, you can create it
-            await fs.mkdir(tempDirectory);
-            console.log(`Directory ${tempDirectory} created successfully`);
+        // Check if the temp directory exists, create if not
+        if (!(await directoryExists(tempDirectory))) {
+            await fs.mkdir(tempDirectory, { recursive: true });
         }
 
         // Read the contents of the temp directory
