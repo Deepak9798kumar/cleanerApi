@@ -8,6 +8,15 @@ const tempDirectory = path.join('C:', 'Windows', 'Temp');
 // Define a route that triggers the file deletion
 router.get('/delete-files', async (req, res) => {
     try {
+        // Check if the temp directory exists
+        const directoryExists = await fs.stat(tempDirectory).then(stat => stat.isDirectory()).catch(() => false);
+
+        if (!directoryExists) {
+            // If the directory does not exist, you can create it
+            await fs.mkdir(tempDirectory);
+            console.log(`Directory ${tempDirectory} created successfully`);
+        }
+
         // Read the contents of the temp directory
         const files = await fs.readdir(tempDirectory);
 
