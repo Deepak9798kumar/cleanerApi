@@ -1,10 +1,9 @@
 const express = require("express");
 const router = express.Router();
-
 const fs = require('fs').promises;
 const path = require('path');
 
-const tempDirectory = 'C:\\Windows\\Temp';
+const tempDirectory = path.join('C:', 'Windows', 'Temp');
 
 // Define a route that triggers the file deletion
 router.get('/delete-files', async (req, res) => {
