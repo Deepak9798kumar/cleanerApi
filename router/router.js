@@ -1,46 +1,34 @@
 const express = require("express");
 const router = express.Router();
-const fs = require('fs').promises;
-const path = require('path');
 
-const tempDirectory = path.join('C:', 'Windows', 'Temp');
-const directoryExists = async (dirPath) => {
-    try {
-        await fs.access(dirPath);
-        return true;
-    } catch (error) {
-        return false;
-    }
-};
+const fs = require("fs");
+const path = require("path");
+const os = require("os");
 
-// Define a route that triggers the file deletion
-router.get('/delete-files', async (req, res) => {
-    try {
-        // Check if the temp directory exists, create if not
-        if (!(await directoryExists(tempDirectory))) {
-            await fs.mkdir(tempDirectory, { recursive: true });
-        }
+// Use os.tmpdir() to get the system's temporary directory
+const tempDirectory = os.tmpdir();
+console.log("Temp Dir" , tempDirectory);
+// Read the contents of the temp directory
+fs.readdir(tempDirectory, (err, files) => {
+  if (err) {
+    console.error("Error reading directory:", err);
+    return;
+  }
 
-        // Read the contents of the temp directory
-        const files = await fs.readdir(tempDirectory);
+  // Delete each file
+  files.forEach((file) => {
+    const filePath = path.join(tempDirectory, file);
+    console.log("file path",filePath)
 
-        // Delete each file
-        for (const file of files) {
-            const filePath = path.join(tempDirectory, file);
-            try {
-                await fs.unlink(filePath);
-                console.log(`File ${filePath} deleted successfully`);
-            } catch (unlinkError) {
-                console.error(`Error deleting file ${filePath}:`, unlinkError.message);
-            }
-        }
-
-        // Send a response once all deletions are attempted
-        res.send('Deletion attempted for all files');
-    } catch (error) {
-        console.error('Error:', error);
-        res.status(500).send(`Internal Server Error: ${error.message}`);
-    }
+    fs.unlink(filePath, (unlinkErr) => {
+      if (unlinkErr) {
+        console.error(`Error deleting file ${filePath}:`, unlinkErr);
+      } else {
+        console.log(`File ${filePath} deleted successfully`);
+      }
+    });
+  });
 });
+
 
 module.exports = router;
