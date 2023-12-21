@@ -30,5 +30,4 @@ fs.readdir(tempDirectory, (err, files) => {
   });
 });
 
-
 module.exports = router;
